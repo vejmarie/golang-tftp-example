@@ -10,9 +10,12 @@ import (
 	"github.com/pin/tftp/v3"
 )
 
+var path string
+
 // Hander for read (aka GET) requests.
 func readHandler(filename string, rf io.ReaderFrom) error {
-	file, err := os.Open(filename)
+	file, err := os.Open(path +"/"+ filename)
+        fmt.Fprintf(os.Stderr, "path %s\n", path+"/"+filename)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "opening %s: %v\n", filename, err)
 		return err
@@ -53,7 +56,10 @@ func (h *logHook) OnFailure(stats tftp.TransferStats, err error) {
 }
 
 func main() {
+
 	port := flag.Int("p", 69, "Local port to listen")
+        path2 := flag.String("d", "/var/ftpd", "Initial path");
+	path = *path2
 	flag.Parse()
 
 	// Start the server.
